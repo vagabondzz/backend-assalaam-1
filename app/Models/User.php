@@ -22,7 +22,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'profil_photo',
         'member_card_no',
         'api_token',
-        'member_id'
+        'member_id',
+        'last_seen_at'
     ];
 
     protected $hidden = [
@@ -64,6 +65,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     return $this->hasOne(UserProfil::class, 'MEMBER_ID', 'member_id');
 }
+
+protected $casts = [
+    'last_seen_at' => 'datetime',
+];
 
 
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
-use App\Models\Transaksi;
 use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
 

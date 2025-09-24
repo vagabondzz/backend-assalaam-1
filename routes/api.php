@@ -1,14 +1,19 @@
 <?php
 
+use App\Http\Controllers\AdminChatController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardMemberController;
 use App\Http\Controllers\AdminGuestController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\MemberProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\UserChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +38,7 @@ Route::group([
 ], function () {
     Route::get('/dashboard', [UserDashboardController::class, 'getDashboard']);
     Route::get('/transaction', [UserDashboardController::class, 'getAllTransactions']);
+    Route::get('/barcode', [UserDashboardController::class, 'barcodeMember']);
 });
 
 
@@ -65,6 +71,10 @@ Route::group([
     Route::post('/register-profil', [CardMemberController::class, 'registerOrUpdate']);
     Route::patch('/status', [CardMemberController::class, 'updateStatus']);
     Route::delete('/delete', [CardMemberController::class, 'delete']);
+    Route::get('/profile-member', [MemberProfileController::class, 'show']);
+    Route::put('/profile-update', [MemberProfileController::class, 'update']);
+    Route::post('/profile-photo', [MemberProfileController::class, 'uploadPhoto']);
+    Route::post('/profile-photo/delete', [MemberProfileController::class, 'deletePhoto']);
 });
 
 // ====== ADMIN ROUTES ======
@@ -88,6 +98,8 @@ Route::group([
     Route::post('/card-guest/{id}/update-card', [AdminGuestController::class, 'updateCardNo']);
     Route::post('/activated-callback', [AdminGuestController::class, 'activatedCallback']);
 
+    Route::get('/card-admin', [AdminController::class, 'index']);
+
 });
 
 
@@ -102,4 +114,20 @@ Route::group([
     Route::post('/send', [GuestController::class, 'store'])->name('guest.store'); 
     Route::get('/waiting-approval',[GuestController::class, 'waitingApproval'])->name('waitingApproval');
     Route::get('/me',[AdminGuestController::class, 'me'])->name('me');
+});
+
+// ====== USER CHAT ROUTES ======
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'message',
+], function () {
+    Route::get('/chats', [UserChatController::class, 'getMessages']);
+    Route::get('/chats-admin', [UserChatController::class, 'getAdminMessages']);
+    Route::post('/chats-send', [UserChatController::class, 'sendMessage']);
+
+    Route::get('/admin-user', [AdminChatController::class, 'getUsers']);
+    Route::get('/chats/{userId}', [AdminChatController::class, 'getMessages']);
+    Route::post('/chats/{userId}', [AdminChatController::class, 'sendMessage']);
+
+
 });
