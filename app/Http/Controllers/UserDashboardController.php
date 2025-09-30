@@ -11,9 +11,6 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class UserDashboardController extends Controller
 {
-    /**
-     * Ambil seluruh data dashboard user/member
-     */
     public function getDashboard()
     {
         try {
@@ -76,8 +73,10 @@ class UserDashboardController extends Controller
             $transactionsRaw = collect();
             try {
                 $token = JWTAuth::getToken();
+
+                $backend2Url = env('BACKEND_2');
                 $response = Http::withToken($token)
-                    ->get("http://127.0.0.1:8002/api/member/{$profil->MEMBER_ID}/transactions");
+                    ->get( $backend2Url . "/api/member/{$profil->MEMBER_ID}/transactions");
 
                 if ($response->ok()) {
                     $transactionsRaw = collect($response->json());
@@ -225,9 +224,10 @@ class UserDashboardController extends Controller
         $generator = new BarcodeGeneratorPNG();
         $barcode = $generator->getBarcode($user->member_card_no, $generator::TYPE_CODE_128);
 
-        return response($barcode, 200)
-            ->header('Content-Type', 'image/png')
-            ->header('Content-Disposition', 'inline; filename="barcode_'.$user->member_card_no.'.png"');
+        return response()->json([
+            'success' => true,
+            'barcode' => 'data:image/png;base64,' . base64_encode($barcode)
+        ]);
     }
     
     

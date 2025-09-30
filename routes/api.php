@@ -12,10 +12,12 @@ use App\Http\Controllers\MemberProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\UserChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 // ====== AUTH ROUTES ======
 Route::group([
@@ -29,6 +31,8 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
     Route::get('me', [AuthController::class, 'me']);
     Route::get('check-membership', [AuthController::class, 'checkMembership']);
+    Route::post('forgot-password', [ForgotPasswordController::class, 'resetByMember']);
+    
 });
 
 // ====== MEMBER ROUTES ======
@@ -39,6 +43,7 @@ Route::group([
     Route::get('/dashboard', [UserDashboardController::class, 'getDashboard']);
     Route::get('/transaction', [UserDashboardController::class, 'getAllTransactions']);
     Route::get('/barcode', [UserDashboardController::class, 'barcodeMember']);
+    Route::post('/change-password', [ForgotPasswordController::class, 'changePassword']);
 });
 
 
@@ -83,6 +88,8 @@ Route::group([
     'prefix' => 'admin',
 ], function () {
 
+    Route::post('/register-cs', [AuthController::class, 'registerCs']);
+
     Route::get('/card-members', [AdminMemberController::class, 'index']);
     Route::get('/card-members/{id}', [AdminMemberController::class, 'show']);
     Route::post('/card-members/{id}/activation', [AdminMemberController::class, 'updateActivation']);
@@ -99,6 +106,10 @@ Route::group([
     Route::post('/activated-callback', [AdminGuestController::class, 'activatedCallback']);
 
     Route::get('/card-admin', [AdminController::class, 'index']);
+
+    Route::get('/promo', [PromoController::class, 'index']);
+    Route::post('/promo-save', [PromoController::class, 'store']);
+    Route::delete('/promo/{id}', [PromoController::class, 'destroy']);
 
 });
 

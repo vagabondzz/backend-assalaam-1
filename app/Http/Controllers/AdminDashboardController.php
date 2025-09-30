@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-
-use Carbon\Carbon;
-
 class AdminDashboardController extends Controller
 {
     public function getDashboardSummary()
@@ -15,9 +12,12 @@ class AdminDashboardController extends Controller
         // Ambil JWT token user yang sedang login di backend utama
         $token = JWTAuth::getToken();
 
+        // Ambil URL backend kedua dari .env
+        $backend2Url = env('BACKEND_2');
+
         // Kirim request ke backend kedua
         $response = Http::withToken($token)
-            ->get('http://127.0.0.1:8002/api/admin/dashboard');
+            ->get($backend2Url . '/api/admin/dashboard');
 
         // Cek kalau ada error dari backend kedua
         if ($response->failed()) {

@@ -129,8 +129,9 @@ class MemberProfileController extends Controller
                 'USER_UPDATE' => 'web'
             ]);
 
+            $backend2Url = env('BACKEND_2');
             $response = Http::withToken($token)
-                ->put('http://127.0.0.1:8002/api/member/update-profile', $payload);
+                ->put( $backend2Url . '/api/member/update-profile', $payload);
 
             if ($response->failed()) {
                 Log::error('Gagal push update profil ke backend kedua', [

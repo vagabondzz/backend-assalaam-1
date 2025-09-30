@@ -73,8 +73,9 @@ class AdminMemberController extends Controller
             Log::info('Mengirim update aktivasi ke backend kedua', $payload);
 
             $token = JWTAuth::getToken(); // ambil token JWT yang sedang dipakai
+            $backend2Url = env('BACKEND_2');
             $response = Http::withToken($token)
-                ->post('http://127.0.0.1:8002/api/member/active', $payload);
+                ->post( $backend2Url . '/api/member/active', $payload);
 
             if ($response->failed()) {
                 Log::error('Respon gagal dari backend kedua', [

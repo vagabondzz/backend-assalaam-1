@@ -17,8 +17,9 @@ class TransaksiController extends Controller
 
         $token = JWTAuth::getToken();
 
+        $backend2Url = env('BACKEND_2');
         $response = Http::withToken($token)
-        ->get('http://127.0.0.1:8002/api/admin/transaksi', [
+        ->get( $backend2Url . '/api/admin/transaksi', [
             'search' => $search,
             'per_page' => $perPage,
             'page' => $page,

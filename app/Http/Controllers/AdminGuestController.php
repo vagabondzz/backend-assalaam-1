@@ -105,8 +105,10 @@ class AdminGuestController extends Controller
             Log::info('Mengirim payload ke backend kedua', $payload);
 
             $token = JWTAuth::getToken();
+            
+            $backend2Url = env('BACKEND_2');
             $response = Http::withToken($token)
-                ->post('http://127.0.0.1:8002/api/member/validate', $payload);
+                ->post( $backend2Url. '/api/member/validate', $payload);
 
             if ($response->failed()) {
                 Log::error('Respon gagal dari backend kedua', [
@@ -147,7 +149,7 @@ class AdminGuestController extends Controller
                     'MEMBER_TELP'          => $guest->MEMBER_TELP,
                     'MEMBER_NPWP'          => $guest->MEMBER_NPWP,
                     'USER_CREATE'          => 'web',
-                    'MEMBER_IS_VALID'=> 1,
+                    'MEMBER_IS_ACTIVE'=> 1,
                     'MEMBER_ACTIVE_FROM' => now(),
                     'MEMBER_ACTIVE_TO'   => now()->addYear(),
                     'DATE_CREATE'        => now()
